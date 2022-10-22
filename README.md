@@ -94,7 +94,7 @@ https://azure.microsoft.com/en-us/explore/global-infrastructure/products-by-regi
 ### Installation
 1. Clone the repository
 ```
-git clone https://github.com/intel-sandbox/applications.ai.appliedml.workflow.azureml.git
+git clone https://github.com/intel/Intel-NLP-workflow-for-Azure-ML.git
 cd applications.ai.appliedml.workflow.azureml
 ```
 2. Build the docker image to prepare the environment for running the Juypter notebooks.
