@@ -123,8 +123,7 @@ After starting the container (i.e. executing the step in 'Usage'), execute the f
 cd /root/notebooks
 jupyter notebook --allow-root
 ```
-Start the notebook that is named as inference.
-
+Start the notebook that is named as inference. Set number of physical cores in score_hf.py according to the machine. The variable should contain a space-separated or comma-separated list of physical CPUs. The best configuration found for Standard_D16_v5 is currently set as default, but users may choose to explore different numbers of physical cores for different machines.
 ## License 
 
 [License](LICENSE)

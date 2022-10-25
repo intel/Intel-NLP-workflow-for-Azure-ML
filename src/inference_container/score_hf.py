@@ -26,7 +26,7 @@ from torch.nn import functional as F
 from neural_compressor.utils.load_huggingface import OptimizedModel
 
 
-#Optimizations - depends on the vCPUs of the instance. Please change accordingly.
+#Optimizations - depends on the CPUs of the instance. Please change accordingly.
 os.environ['GOMP_CPU_AFFINITY']='0-3'
 os.environ['OMP_PROC_BIND']='CLOSE'
 os.environ['OMP_SCHEDULE']='STATIC'
