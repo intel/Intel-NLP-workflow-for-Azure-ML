@@ -1,7 +1,7 @@
 
 # Intel® NLP workflow for Azure* ML
 
-This is a workflow to demonstrate how users utilize the Intel’s XPU hardware (e.g.: CPU - Ice Lake or above) and related optimized software to perform distributed training and inference on Azure Machine Learning Platform. The main software packages used here are: Intel Extension for PyTorch, PyTorch, HuggingFace, Azure Machine Learning Platform and Intel Neural Compressor
+This is a workflow to demonstrate how users utilize the Intel’s XPU hardware (e.g.: CPU - Ice Lake or above / GPU - going to be supported) and related optimized software to perform distributed training and inference on Azure Machine Learning Platform. The main software packages used here are: Intel Extension for PyTorch, PyTorch, HuggingFace, Azure Machine Learning Platform and Intel Neural Compressor
 
 ## Table of Contents 
 - [Implementation Details](#implementation-details)
@@ -124,6 +124,24 @@ cd /root/notebooks
 jupyter notebook --allow-root
 ```
 Start the notebook that is named as inference. Set number of physical cores in score_hf.py according to the machine. The variable should contain a space-separated or comma-separated list of physical CPUs. The best configuration found for Standard_D16_v5 is currently set as default, but users may choose to explore different numbers of physical cores for different machines.
+
+## Result
+
+
+
+| **Name**                      | **Description**
+| :---                          | :---
+| Instance                      | Intel CPU - Ice Lake or above
+| Inference                     | Real-time infernece (non-batch)
+| Model                         | bert-base-uncased
+| Max-seq-length                | 128
+| Dataset                       | MRPC
+
+
+| Stock - FP32  | Intel - INT8 | Gain| Accuracy Loss
+| ------------- | ------------- | ------------- | ------------- |
+| 0.703s  | 0.465s  | <b>1.512x | <b> <1% |
+
 ## License 
 
 [License](LICENSE)
