@@ -19,7 +19,7 @@
 FROM ubuntu:20.04
 
 RUN apt-get update && \
-    apt-get install --no-install-recommends curl=7.68.0-1ubuntu2.13 -y && \
+    apt-get install --no-install-recommends curl=7.68.0-1ubuntu2.14 -y && \
     apt-get install --no-install-recommends python3-pip=20.0.2-5ubuntu1.6 -y && \
     rm -r /var/lib/apt/lists/*
 
