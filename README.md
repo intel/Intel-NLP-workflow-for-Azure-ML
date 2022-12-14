@@ -1,32 +1,16 @@
+# **Intel® NLP workflow for Azure** ML - Inference
 
-# Intel® NLP workflow for Azure* ML
+## Overview
+This workflow demonstrates how users can utilize Intel’s XPU hardware (e.g.: CPU - Ice Lake or above) and related optimized software to perform distributed training and inference on the Azure Machine Learning Platform. The main software packages used here are Intel Extension for PyTorch, PyTorch, HuggingFace, Azure Machine Learning Platform, and Intel Neural Compressor. For more detailed information, please visit the [Intel® NLP workflow for Azure* ML](https://github.com/intel/Intel-NLP-workflow-for-Azure-ML) GitHub repository.
 
-This is a workflow to demonstrate how users utilize the Intel’s XPU hardware (e.g.: CPU - Ice Lake or above / GPU - going to be supported) and related optimized software to perform distributed training and inference on Azure Machine Learning Platform. The main software packages used here are: Intel Extension for PyTorch, PyTorch, HuggingFace, Azure Machine Learning Platform and Intel Neural Compressor
-
-## Table of Contents 
-- [Implementation Details](#implementation-details)
-    - [Architecture](#architecture)
-    - [Model Spec](#model-spec)
-    - [Dataset](#dataset)
-- [Getting Started](#installation)
-    - [Prerequisites](#prerequisites)
-    - [Installation](#installation)
-- [Usage](#usage)
-    - [Training](#training)
-    - [Inference](#inference)
-- [License](#license)
-
-## Implementation Details
-This workflow ultilizes the infrastructure provided by the AzureML.
+## How it Works
+This workflow utilizes the infrastructure provided by AzureML.
 
 ### Architecture 
 
 AzureML:
-<br>
-<br>
-<img src="assets/azureml_architecture.JPG" width="1280">
-<br>
-<br>
+
+![azureml_architecture](https://user-images.githubusercontent.com/43555799/205149722-e37dcec5-5ef2-4440-92f2-9dc243b9e556.jpg)
 
 ### Model Spec
 The uncased BERT base model is used to demonstrate this workflow.
@@ -65,16 +49,9 @@ Microsoft Research Paraphrase Corpus is used as the dataset for training and tes
 | Training Dataset         | HuggingFace Dataset  | 3668
 | Testing  Dataset         | HuggingFace Dataset  | 1725
 
-## Getting Started
-### Prerequisites
-#### Hardware
-| **Name**                          | **Description**
-| :---                              | :---
-| CPU                               | Intel CPU - Ice Lake or above
-| Usable RAM                        | 16 GB
-| Disk Size                         | 256 GB
+## Get Started
 
-#### Software
+### **Prerequisites**
 Docker is required to start this workflow. You will also need Azure credentials to perform any training/inference related operations.
 
 For setting up the Azure Machine Learning Account, you may refer to the following link:
@@ -85,63 +62,88 @@ For configuring the Azure credentials using the Command-Line Interface, you may 
 <br>
 https://docs.microsoft.com/en-us/cli/azure/authenticate-azure-cli
 
-The following two websites listed out the availability and type of the instances for users. Users may based on their needs and the region to choose appropriate instances:
+The following two websites list out the availability and type of the instances for users. Users may choose the appropriate instances based on their needs and region:
 <br>
 https://learn.microsoft.com/en-us/azure/machine-learning/concept-compute-target
 <br>
 https://azure.microsoft.com/en-us/explore/global-infrastructure/products-by-region/?products=virtual-machines&regions=us-east
 
-### Installation
-1. Clone the repository
+#### Download the Repo
+Clone [Intel® NLP workflow for Azure* ML](https://github.com/intel/Intel-NLP-workflow-for-Azure-ML) repository into your working directory.
 ```
-git clone https://github.com/intel/Intel-NLP-workflow-for-Azure-ML.git
-cd applications.ai.appliedml.workflow.azureml
+git clone https://github.com/intel/Intel-NLP-workflow-for-Azure-ML.git .
+git checkout v1.0.1
 ```
-2. Build the docker image to prepare the environment for running the Juypter notebooks.
+
+#### Download the Datasets
+The dataset will be downloaded the first time the training runs.
+
+### **Docker**
+Below setup and how-to-run sessions are for users who want to use the provided docker image to run the entire pipeline. 
+For interactive set up, please go to [Interactive Docker](#interactive-docker).
+
+#### Setup 
+Download the `config.json` file from your Azure ML Studio Workspace.
+
+##### Pull Docker Image
+```
+docker pull intel/ai-workflows:nlp-azure-inference
+```
+
+#### How to Run 
+Use the inference script `1.0-intel-azureml-inference.py` and downloaded `config.json` file to run the inference pipeline.
+
+The code snippet below runs the inference session. This session will call the FP32 model generated during the training session from the `notebooks/fp32_model_output` folder.
+```
+export AZURE_CONFIG_FILE=<path to config file downloaded from Azure ML Studio Workspace>
+
+docker run \
+  --env http_proxy=${http_proxy} \
+  --env https_proxy=${https_proxy} \
+  --env no_proxy=${no_proxy} \
+  --volume ${PWD}/notebooks:/root/notebooks \
+  --volume ${PWD}/src:/root/src \
+  --volume ${PWD}/${AZURE_CONFIG_FILE}:/root/notebooks/config.json \
+  --workdir /root/notebooks \
+  --privileged --init -it \
+  intel/ai-workflows:nlp-azure-inference \
+  sh -c "jupyter nbconvert --to python 1.0-intel-azureml-inference.ipynb && python3 1.0-intel-azureml-inference.py"
+```
+
+### **Interactive Docker**
+Below setup and how-to-run sessions are for users who want to use an interactive environment.  
+For docker pipeline, please go to [docker session](#docker).
+#### Setup 
+
+Build the docker image to prepare the environment for running the Jupyter notebooks.
 ```
 cd scripts
 sh build_main_image.sh
 ```
 
-## Usage 
-Use the built docker image (by build_main_image.sh) to run the Juypter notebooks. Execute the following command:
+Use the built docker image (by `build_main_image.sh`) to run the Jupyter notebooks. Execute the following command:
 ```bash
 sh start_script.sh
 ```
-
-### Training 
-After starting the container (i.e. executing the step in 'Usage'), execute the following command in the interactive shell.
+After starting the container, execute the following command in the interactive shell.
 ```bash
-cd /root/notebooks
-jupyter notebook --allow-root
-```
-Start the notebook that is named as training.
-
-### Inference
-After starting the container (i.e. executing the step in 'Usage'), execute the following command in the interactive shell.
-```bash
-cd /root/notebooks
+cd notebooks
 jupyter notebook --allow-root
 ```
 Start the notebook that is named as inference. Set number of physical cores in score_hf.py according to the machine. The variable should contain a space-separated or comma-separated list of physical CPUs. The best configuration found for Standard_D16_v5 is currently set as default, but users may choose to explore different numbers of physical cores for different machines.
 
-## Result
+## Recommended Hardware 
+The hardware below is recommended for use with this reference implementation. 
+| **Name**         | **Description**               |
+| ----------       | ----------------------------- |
+| CPU              | Intel CPU - Ice Lake or above |
+| Usable RAM       | 16 GB                         |
+| Disk Size        | 256 GB                        |
 
+## Useful Resources 
+[Intel® AI Analytics Toolkit (AI Kit)](https://www.intel.com/content/www/us/en/developer/tools/oneapi/ai-analytics-toolkit.html)
+<br>
+[Azure Machine Learning Documentation](https://learn.microsoft.com/en-us/azure/machine-learning/)
 
-
-| **Name**                      | **Description**
-| :---                          | :---
-| Instance                      | Intel CPU - Ice Lake or above
-| Inference                     | Real-time infernece (non-batch)
-| Model                         | bert-base-uncased
-| Max-seq-length                | 128
-| Dataset                       | MRPC
-
-
-| Stock - FP32  | Intel - INT8 | Gain| Accuracy Loss
-| ------------- | ------------- | ------------- | ------------- |
-| 0.703s  | 0.465s  | <b>1.512x | <b> <1% |
-
-## License 
-
-[License](LICENSE)
+## Support Forum 
+[Intel® NLP workflow for Azure* ML](https://github.com/intel/Intel-NLP-workflow-for-Azure-ML) tracks both bugs and enhancement requests using GitHub. We welcome input, however, before filing a request, please make sure you do the following: Search the GitHub issue database.
