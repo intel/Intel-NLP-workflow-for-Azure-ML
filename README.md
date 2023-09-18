@@ -134,11 +134,11 @@ Start the notebook that is named as inference. Set number of physical cores in s
 
 ## Recommended Hardware 
 The hardware below is recommended for use with this reference implementation. 
-| **Name**         | **Description**               |
-| ----------       | ----------------------------- |
-| CPU              | Intel CPU - Ice Lake or above |
-| Usable RAM       | 16 GB                         |
-| Disk Size        | 256 GB                        |
+| **Name**         | **Description**                                           |
+| ----------       | ----------------------------------------------------------|
+| CPU              | 4th Generation Intel® Xeon® Scalable Processors           |
+| Usable RAM       | 16 GB                                                     |
+| Disk Size        | 256 GB                                                    |
 
 ## Useful Resources 
 [Intel® AI Analytics Toolkit (AI Kit)](https://www.intel.com/content/www/us/en/developer/tools/oneapi/ai-analytics-toolkit.html)
